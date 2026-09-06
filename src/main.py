@@ -13,6 +13,12 @@ json_data = {
     "urls": []
 }
 # emails
+def mask_email(email: str) -> str:
+    username, domain = email.split("@")
+
+    masked_username = username[0] + "*" * (len(username) - 1)
+
+    return masked_username + "@" + domain
 
 email_pattern = r"([a-zA-Z0-9](?:[a-zA-Z0-9._]*[a-zA-Z0-9])?)@((?:alueducation|alumni\.alueducation|si\.alueducation)\.com)(?!\.[a-zA-Z0-9]|<)"
 emails = []
@@ -24,11 +30,23 @@ for line in raw_lines:
 
     for match in matches:
         extracted_email = match.group(0)
+        extracted_email = mask_email(extracted_email)
         emails.append(extracted_email)
 
 
 
 # phone number
+
+def mask_phone(phone: str) -> str:
+    if phone.startswith("+250"):
+        if "-" in phone:
+            parts = phone.split("-")
+            return parts[0] + "-" + parts[1] + "-***-***"
+        else:
+            parts = phone.split()
+            return parts[0] + " " + parts[1] + " *** ***"
+
+    return phone[:4] + "*** ***"
 
 phone_pattern = r"(?<!\d)(?:\+250[\s-]?\d{3}[\s-]?\d{3}[\s-]?\d{3}|0\d{9})(?!\d)"
 phone_numbers = []
@@ -40,11 +58,19 @@ for line in raw_lines:
 
     for match in matches:
         phone_number = match.group(0)
+        phone_number = mask_phone(phone_number)
         phone_numbers.append(phone_number)
 
 
 
 # credit card number
+
+def mask_credit(credit: str) -> str:
+    digits_only = "".join(char for char in credit if char.isdigit())
+    last_4_digits = digits_only[-4:]
+    masked = "*" * (len(digits_only) - 4)
+    return masked + last_4_digits
+
 
 credit_pattern = r"(\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4})(?![-\w])"
 credit_card_numbers = []
@@ -56,6 +82,7 @@ for line in raw_lines:
 
     for match in matches:
         credit_card_number = match.group(0)
+        credit_card_number = mask_credit(credit_card_number)
         credit_card_numbers.append(credit_card_number)
 
 
@@ -93,3 +120,5 @@ json_data["urls"] = urls_addresses
 
 with open("output/sample-output.json", "w") as file:
     json.dump(json_data, file, indent=4)
+
+
