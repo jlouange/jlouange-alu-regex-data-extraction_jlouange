@@ -406,12 +406,8 @@ The program will:
 2. Search the input using regular expressions.
 3. Extract matching values.
 4. Mask sensitive information.
-5. Print extraction summaries.
-6. Write the results to:
+5. Write the extracted and masked results to `output/sample-output.json`.
 
-```text
-output/sample-output.json
-```
 
 
 
