@@ -47,3 +47,23 @@ for phone_number in phone_numbers:
 
 with open("output/sample-output.json", "w") as file:
     json.dump(data1, file, indent=4)
+
+
+credit_pattern = r"(\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4})(?![-\w])"
+credit_card_numbers = []
+for line in data:
+    clean_line = line.strip()  
+    if not clean_line:
+        continue
+    match = re.search(credit_pattern, clean_line)
+    if match:
+        credit_card_number = match.group(0)
+        credit_card_numbers.append(credit_card_number)
+
+with open("output/sample-output.json", "r") as file:
+    data1 = json.load(file)
+for credit_card_number in credit_card_numbers:
+    data1["credit_cards"].append(credit_card_number)
+
+with open("output/sample-output.json", "w") as file:
+    json.dump(data1, file, indent=4)
