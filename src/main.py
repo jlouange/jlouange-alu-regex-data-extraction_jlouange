@@ -14,7 +14,7 @@ json_data = {
 }
 # emails
 
-email_pattern = r"([a-zA-Z0-9](?:[a-zA-Z0-9._]*[a-zA-Z0-9])?)@((?:alueducation|alumni\.alueducation|si\.alueducation)\.com)(?![.\w<])"
+email_pattern = r"([a-zA-Z0-9](?:[a-zA-Z0-9._]*[a-zA-Z0-9])?)@((?:alueducation|alumni\.alueducation|si\.alueducation)\.com)(?!\.[a-zA-Z0-9]|<)"
 emails = []
 for line in raw_lines:
     clean_line = line.strip()  # Removes trailing \n and spaces
@@ -62,7 +62,7 @@ for line in raw_lines:
 
 # URLs
 
-url_pattern = r"https?:\/\/(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[a-zA-Z0-9](?:[a-zA-Z0-9._-]*[a-zA-Z0-9])?)*(?![a-zA-Z0-9._/-])"
+url_pattern = r"https?:\/\/(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[a-zA-Z0-9](?:[a-zA-Z0-9._-]*[a-zA-Z0-9])?)*(?!\.[a-zA-Z0-9-])"
 urls_addresses = []
 for line in raw_lines:
     clean_line = line.strip()  
