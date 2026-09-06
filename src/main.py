@@ -12,18 +12,22 @@ json_data = {
     "credit_cards": [],
     "urls": []
 }
-# emails
+# emails extraction
 def mask_email(email: str) -> str:
+    """Mask an email username while keeping the domain visible."""
     username, domain = email.split("@")
 
     masked_username = username[0] + "*" * (len(username) - 1)
 
     return masked_username + "@" + domain
 
+# Match valid ALU email addresses from the three allowed ALU domains.
+# The username must start and end with an alphanumeric character.
+# Dots and underscores are allowed inside the username.
 email_pattern = r"([a-zA-Z0-9](?:[a-zA-Z0-9._]*[a-zA-Z0-9])?)@((?:alueducation|alumni\.alueducation|si\.alueducation)\.com)(?!\.[a-zA-Z0-9]|<)"
 emails = []
 for line in raw_lines:
-    clean_line = line.strip()  # Removes trailing \n and spaces
+    clean_line = line.strip()  
     if not clean_line:
         continue
     matches = re.finditer(email_pattern, clean_line)
@@ -35,9 +39,10 @@ for line in raw_lines:
 
 
 
-# phone number
+# phone number extraction
 
 def mask_phone(phone: str) -> str:
+    """Mask the sensitive part of a Rwandan phone number."""
     if phone.startswith("+250"):
         if "-" in phone:
             parts = phone.split("-")
@@ -48,6 +53,10 @@ def mask_phone(phone: str) -> str:
 
     return phone[:4] + "*** ***"
 
+
+# Match Rwandan phone numbers in international and local formats.
+# Supports +250 numbers with optional spaces/hyphens and
+# local numbers beginning with 0.
 phone_pattern = r"(?<!\d)(?:\+250[\s-]?\d{3}[\s-]?\d{3}[\s-]?\d{3}|0\d{9})(?!\d)"
 phone_numbers = []
 for line in raw_lines:
@@ -63,15 +72,19 @@ for line in raw_lines:
 
 
 
-# credit card number
+# credit card number extraction
 
 def mask_credit(credit: str) -> str:
+    """Mask a credit card number and keep only the last four digits visible."""
     digits_only = "".join(char for char in credit if char.isdigit())
     last_4_digits = digits_only[-4:]
     masked = "*" * (len(digits_only) - 4)
     return masked + last_4_digits
 
 
+# Match 16-digit credit card numbers with optional spaces or hyphens.
+# The final boundary prevents matching a valid-looking card number
+# when it is followed by additional word or separator characters.
 credit_pattern = r"(\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4})(?![-\w])"
 credit_card_numbers = []
 for line in raw_lines:
@@ -87,8 +100,12 @@ for line in raw_lines:
 
 
 
-# URLs
+# URL extraction
 
+
+# Match HTTP and HTTPS URLs with a valid domain and optional path.
+# The pattern is intentionally restrictive so malformed URLs
+# such as "https://" are ignored.
 url_pattern = r"https?:\/\/(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[a-zA-Z0-9](?:[a-zA-Z0-9._-]*[a-zA-Z0-9])?)*(?!\.[a-zA-Z0-9-])"
 urls_addresses = []
 for line in raw_lines:
@@ -101,17 +118,7 @@ for line in raw_lines:
         url_address = match.group(0)
         urls_addresses.append(url_address)
 
-print("EMAILS:", len(emails))
-print(emails)
 
-print("PHONES:", len(phone_numbers))
-print(phone_numbers)
-
-print("CARDS:", len(credit_card_numbers))
-print(credit_card_numbers)
-
-print("URLS:", len(urls_addresses))
-print(urls_addresses)
 
 json_data["emails"] = emails
 json_data["phone_numbers"] = phone_numbers
