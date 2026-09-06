@@ -197,7 +197,7 @@ Important parts include:
 * `\.` — matches a literal dot.
 * `(?!...)` — prevents certain unwanted characters or extensions from being accepted after the valid domain.
 
----
+
 
 ## Phone Pattern
 
@@ -220,7 +220,7 @@ Important parts include:
 * `0\d{9}` — matches a 10-digit local number beginning with `0`.
 * `(?<!\d)` and `(?!\d)` — help prevent matching a phone number as part of a larger sequence of digits.
 
----
+
 
 ## Credit Card Pattern
 
@@ -240,7 +240,6 @@ nothing
 
 The final condition helps prevent the regex from accepting a valid-looking card number when it is immediately followed by additional word or separator characters.
 
----
 
 ## URL Pattern
 
@@ -257,7 +256,7 @@ Important parts include:
 * The optional path section allows URLs to contain paths.
 * The final negative lookahead helps prevent a trailing period or additional invalid characters from being included.
 
----
+
 
 # ALU-Specific Email Validation
 
